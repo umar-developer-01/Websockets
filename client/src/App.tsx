@@ -3,6 +3,8 @@ import "./App.css";
 
 function App() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [latestMessage, setlatestMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     const newSocket = new WebSocket("ws://localhost:8080");
@@ -13,10 +15,15 @@ function App() {
     };
     newSocket.onmessage = (message) => {
       console.log("Message received:", message.data);
+      setlatestMessage(message.data);
     };
 
     return () => newSocket.close();
   }, []);
+
+  const sendData = () => {
+    socket?.send(message || "");
+  };
 
   if (!socket) {
     return (
@@ -25,7 +32,21 @@ function App() {
       </>
     );
   }
-  return <>Hi there socker connection established</>;
+  return (
+    <>
+      <div>
+        <div>Hi there socker connection established</div>
+        <div>
+          <input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          ></input>
+          <button onClick={sendData}>Send</button>
+        </div>
+        <div>{latestMessage}</div>
+      </div>
+    </>
+  );
 }
 
 export default App;
