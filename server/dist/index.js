@@ -39,7 +39,6 @@ wss.on("connection", function connection(ws) {
     ws.on("message", function message(data, isBinary) {
         wss.clients.forEach(function each(client) {
             if (client.readyState === ws_1.default.OPEN) {
-                console.log("this is from the client", data, isBinary);
                 client.send(data, { binary: isBinary });
             }
         });
